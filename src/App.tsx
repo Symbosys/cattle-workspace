@@ -1,74 +1,52 @@
 import React, { useState } from 'react';
 import './index.css';
 import { 
-  Search, 
+  Smartphone, 
   MapPin, 
   ChevronRight, 
   ShoppingBag, 
-  User, 
   Menu, 
   Heart,
   ArrowRight,
   ShieldCheck,
   Zap,
   Globe,
-  Plus
+  Download,
+  CheckCircle2,
+  Users,
+  MessageSquare,
+  Sparkles
 } from 'lucide-react';
-import { APITester } from "./APITester";
 
 import heroImg from './assets/hero.png';
 import buffaloImg from './assets/buffalo.png';
 import dogImg from './assets/dog.png';
 import catImg from './assets/cat.png';
+import mockupImg from './assets/mockup.png';
 
 export function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const categories = [
-    { name: 'Cows', icon: '🐄', count: '1.2k+' },
-    { name: 'Buffaloes', icon: '🐃', count: '850+' },
-    { name: 'Goats', icon: '🐐', count: '2.1k+' },
-    { name: 'Dogs', icon: '🐕', count: '450+' },
-    { name: 'Cats', icon: '🐈', count: '320+' },
-    { name: 'Others', icon: '🐾', count: '150+' },
-  ];
-
-  const featuredListings = [
+  const features = [
     {
-      id: 1,
-      name: 'High-Yield Murrah Buffalo',
-      price: '$2,400',
-      location: 'Punjab, India',
-      image: buffaloImg,
-      category: 'Buffaloes',
-      time: '2 hours ago'
+      title: 'Verified Listings',
+      description: 'Every animal listing is verified by our team to ensure health and authenticity.',
+      icon: <ShieldCheck size={28} />
     },
     {
-      id: 2,
-      name: 'Gir Cow - Pure Breed',
-      price: '$1,850',
-      location: 'Gujarat, India',
-      image: heroImg, // Reusing hero image for variety if needed, but it looks like a cow
-      category: 'Cows',
-      time: '5 hours ago'
+      title: 'Instant Chat',
+      description: 'Connect directly with sellers through our secure in-app messaging system.',
+      icon: <MessageSquare size={28} />
     },
     {
-      id: 3,
-      name: 'Golden Retriever Puppies',
-      price: '$600',
-      location: 'Delhi, India',
-      image: dogImg,
-      category: 'Dogs',
-      time: '1 day ago'
+      title: 'Real-time Prices',
+      description: 'Stay updated with the latest market trends and cattle prices in your region.',
+      icon: <Zap size={28} />
     },
     {
-      id: 4,
-      name: 'Persian White Kitten',
-      price: '$350',
-      location: 'Mumbai, India',
-      image: catImg,
-      category: 'Cats',
-      time: '3 hours ago'
+      title: 'Community Trusted',
+      description: 'Join thousands of farmers and traders who trust CattleTrade daily.',
+      icon: <Users size={28} />
     }
   ];
 
@@ -85,20 +63,15 @@ export function App() {
           </div>
 
           <div className="hidden md:flex items-center gap-8">
-            <a href="#" className="nav-link">Buy Cattle</a>
-            <a href="#" className="nav-link">Sell Cattle</a>
-            <a href="#" className="nav-link">Market Prices</a>
-            <a href="#" className="nav-link">About Us</a>
+            <a href="#features" className="nav-link">Features</a>
+            <a href="#discover" className="nav-link">Discover</a>
+            <a href="#about" className="nav-link">About Us</a>
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="hidden sm:flex items-center gap-2 font-semibold text-[#2d5a27] hover:opacity-80 transition-opacity">
-              <User size={20} />
-              Login
-            </button>
             <button className="btn-primary">
-              <Plus size={20} />
-              Post Ad
+              <Download size={20} />
+              Get the App
             </button>
             <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               <Menu />
@@ -108,249 +81,183 @@ export function App() {
 
         {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden glass-effect absolute top-full left-0 w-full p-6 space-y-4 animate-fade-in">
-            <a href="#" className="block nav-link">Buy Cattle</a>
-            <a href="#" className="block nav-link">Sell Cattle</a>
-            <a href="#" className="block nav-link">Market Prices</a>
-            <a href="#" className="block nav-link">About Us</a>
+          <div className="md:hidden glass-effect absolute top-full left-0 w-full p-6 space-y-4 animate-fade-in shadow-xl">
+            <a href="#features" className="block nav-link" onClick={() => setIsMenuOpen(false)}>Features</a>
+            <a href="#discover" className="block nav-link" onClick={() => setIsMenuOpen(false)}>Discover</a>
+            <a href="#about" className="block nav-link" onClick={() => setIsMenuOpen(false)}>About Us</a>
             <hr className="border-[#eee]" />
-            <button className="w-full flex items-center justify-center gap-2 font-semibold text-[#2d5a27] py-2">
-              <User size={20} />
-              Login
+            <button className="w-full btn-primary justify-center">
+              <Download size={20} />
+              Download Now
             </button>
           </div>
         )}
       </nav>
 
       {/* Hero Section */}
-      <section className="relative h-[85vh] flex items-center justify-center overflow-hidden pt-20">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={heroImg} 
-            alt="Beautiful Cattle" 
-            className="w-full h-full object-cover animate-fade-in"
-          />
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
-        </div>
-
-        <div className="relative z-10 max-w-4xl mx-auto text-center px-6">
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 animate-fade-in-up leading-tight">
-            The World's Premium <br />
-            <span className="text-[#d4a373]">Cattle Marketplace</span>
-          </h1>
-          <p className="text-xl text-white/90 mb-12 animate-fade-in-up delay-100 max-w-2xl mx-auto">
-            Buy and sell cows, buffaloes, goats, and domestic pets with trust and transparency. 
-            Verified sellers and premium livestock at your fingertips.
-          </p>
-        </div>
-      </section>
-
-      {/* Search Bar Container */}
-      <div className="px-6 -mt-16">
-        <div className="search-container animate-fade-in-up delay-200">
-          <div className="flex-1 flex items-center gap-2 pl-4">
-            <Search className="text-[#2d5a27] w-5 h-5" />
-            <input 
-              type="text" 
-              placeholder="What are you looking for?" 
-              className="search-input"
-            />
-          </div>
-          <div className="divider"></div>
-          <div className="flex-1 flex items-center gap-2 px-4">
-            <MapPin className="text-[#2d5a27] w-5 h-5" />
-            <input 
-              type="text" 
-              placeholder="Select Location" 
-              className="search-input"
-            />
-          </div>
-          <button className="btn-primary !px-10 h-[56px]">
-            Search Now
-          </button>
-        </div>
-      </div>
-
-      {/* Popular Categories */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="flex items-end justify-between mb-12">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">Popular Categories</h2>
-            <p className="text-[#666]">Explore cattle and pets by category</p>
-          </div>
-          <a href="#" className="text-[#2d5a27] font-semibold flex items-center gap-1 hover:gap-2 transition-all">
-            View All <ChevronRight size={20} />
-          </a>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-          {categories.map((cat, i) => (
-            <div key={i} className="category-card bg-white p-6 rounded-[32px] text-center cursor-pointer border border-[#eee] hover:border-[#2d5a27] transition-all group">
-              <div className="category-icon mx-auto mb-4 text-3xl group-hover:bg-[#2d5a27] group-hover:text-white">
-                {cat.icon}
-              </div>
-              <h3 className="font-bold text-lg mb-1">{cat.name}</h3>
-              <p className="text-sm text-[#666]">{cat.count} listings</p>
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 bg-[#2d5a27]/10 text-[#2d5a27] px-4 py-2 rounded-full text-sm font-bold mb-6 animate-fade-in">
+              <Sparkles size={16} />
+              The Future of Livestock Trading
             </div>
-          ))}
+            <h1 className="text-5xl md:text-7xl font-extrabold text-[#1a1a1a] mb-8 animate-fade-in-up leading-tight">
+              Trading Cattle Made <br />
+              <span className="text-[#2d5a27]">Simple & Secure</span>
+            </h1>
+            <p className="text-xl text-[#666] mb-10 animate-fade-in-up delay-100 max-w-lg leading-relaxed">
+              CattleTrade is the all-in-one mobile platform to discover, buy, and sell livestock. 
+              Built for modern farmers who value time and transparency.
+            </p>
+            <div className="flex flex-wrap gap-4 animate-fade-in-up delay-200">
+              <a href="#" className="store-button">
+                <Smartphone size={24} />
+                <div className="text-left">
+                  <div className="text-[10px] uppercase opacity-60">Download on</div>
+                  <div className="text-sm font-bold">App Store</div>
+                </div>
+              </a>
+              <a href="#" className="store-button">
+                <Globe size={24} />
+                <div className="text-left">
+                  <div className="text-[10px] uppercase opacity-60">Get it on</div>
+                  <div className="text-sm font-bold">Google Play</div>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div className="relative animate-fade-in">
+            <div className="absolute inset-0 bg-[#2d5a27]/5 rounded-full blur-3xl -z-10 transform scale-150"></div>
+            <img 
+              src={mockupImg} 
+              alt="CattleTrade App Mockup" 
+              className="w-full max-w-lg mx-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.15)]"
+            />
+          </div>
         </div>
       </section>
 
-      {/* Featured Listings */}
-      <section className="py-24 px-6 bg-white">
+      {/* Features Section */}
+      <section id="features" className="py-32 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <h2 className="text-3xl font-bold mb-2">Featured Listings</h2>
-              <p className="text-[#666]">Handpicked premium livestock for you</p>
-            </div>
-            <div className="flex gap-2">
-              <button className="p-3 rounded-full border border-[#eee] hover:bg-[#f4f4f4] transition-colors">
-                <ChevronRight className="rotate-180" />
-              </button>
-              <button className="p-3 rounded-full border border-[#eee] hover:bg-[#f4f4f4] transition-colors">
-                <ChevronRight />
-              </button>
-            </div>
+          <div className="text-center max-w-2xl mx-auto mb-20">
+            <h2 className="text-4xl font-bold mb-6">Built for the Modern Farmer</h2>
+            <p className="text-[#666] text-lg">Our mobile app brings the entire cattle market to your pocket with features designed for trust and ease.</p>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featuredListings.map((item) => (
-              <div key={item.id} className="premium-card group relative">
-                <div className="relative h-64 overflow-hidden">
-                  <img 
-                    src={item.image} 
-                    alt={item.name} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-[#2d5a27]">
-                    {item.category}
-                  </div>
-                  <button className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur rounded-full text-[#666] hover:text-red-500 transition-colors">
-                    <Heart size={18} />
-                  </button>
+          <div className="grid md:grid-cols-4 gap-8">
+            {features.map((feature, i) => (
+              <div key={i} className="p-8 rounded-[40px] bg-[#f9f9f9] border border-[#eee] hover:border-[#2d5a27] transition-all group">
+                <div className="feature-icon-wrapper group-hover:bg-[#2d5a27] group-hover:text-white transition-colors">
+                  {feature.icon}
                 </div>
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-xl group-hover:text-[#2d5a27] transition-colors">{item.name}</h3>
-                    <span className="text-[#2d5a27] font-extrabold text-xl">{item.price}</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-[#666] text-sm mb-4">
-                    <MapPin size={14} />
-                    {item.location}
-                  </div>
-                  <div className="flex items-center justify-between pt-4 border-t border-[#eee]">
-                    <span className="text-xs text-[#999]">{item.time}</span>
-                    <button className="text-[#2d5a27] font-bold text-sm flex items-center gap-1">
-                      Details <ArrowRight size={14} />
-                    </button>
-                  </div>
-                </div>
+                <h3 className="text-xl font-bold mb-4">{feature.title}</h3>
+                <p className="text-[#666] leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Trust Section */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="premium-card bg-[#2d5a27] text-white p-12 md:p-20 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-1/3 h-full bg-[#3a7532] skew-x-[-20deg] translate-x-1/2 opacity-50"></div>
-          <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">Why Trade with Us?</h2>
-              <p className="text-xl text-white/80 mb-8 leading-relaxed">
-                We are India's most trusted platform for livestock and pet trading. 
-                Experience a safe, fast, and transparent marketplace.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="bg-white/10 p-3 rounded-2xl">
-                    <ShieldCheck className="text-[#d4a373] w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold">Verified Sellers</h4>
-                    <p className="text-sm text-white/60">Strict KYC verification</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-white/10 p-3 rounded-2xl">
-                    <Zap className="text-[#d4a373] w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold">Fast Trading</h4>
-                    <p className="text-sm text-white/60">Sell in under 24 hours</p>
-                  </div>
-                </div>
+      {/* Discover Section */}
+      <section id="discover" className="py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-20 items-center">
+            <div className="order-2 md:order-1">
+              <div className="grid grid-cols-2 gap-4">
+                <img src={heroImg} alt="Cattle" className="w-full h-64 object-cover rounded-[32px] mt-12" />
+                <img src={buffaloImg} alt="Buffalo" className="w-full h-64 object-cover rounded-[32px]" />
+                <img src={dogImg} alt="Dog" className="w-full h-64 object-cover rounded-[32px]" />
+                <img src={catImg} alt="Cat" className="w-full h-64 object-cover rounded-[32px] mt-12" />
               </div>
             </div>
-            <div className="hidden md:block">
-              <div className="bg-white/10 backdrop-blur-xl p-8 rounded-[40px] border border-white/20">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-12 bg-white/20 rounded-full"></div>
-                  <div className="flex-1 h-4 bg-white/20 rounded-full"></div>
-                </div>
-                <div className="space-y-4">
-                  <div className="w-full h-32 bg-white/20 rounded-[30px]"></div>
-                  <div className="w-3/4 h-4 bg-white/20 rounded-full"></div>
-                  <div className="w-1/2 h-4 bg-white/20 rounded-full"></div>
-                </div>
-              </div>
+            <div className="order-1 md:order-2">
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">Millions of Livestock <br /> at Your Fingertips</h2>
+              <p className="text-[#666] text-lg mb-8 leading-relaxed">
+                Whether you're looking for high-yield dairy cows, strong buffaloes, or loyal companions, 
+                our app connects you with verified sellers nationwide.
+              </p>
+              <ul className="space-y-4 mb-10">
+                {['Cows & Buffaloes', 'Goats & Sheep', 'Horses & Camels', 'Domestic Pets'].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 font-semibold text-[#1a1a1a]">
+                    <CheckCircle2 className="text-[#2d5a27]" size={20} />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <button className="btn-outline">Learn More about Categories</button>
             </div>
           </div>
         </div>
       </section>
 
+      {/* CTA Section */}
+      <section className="py-32 px-6">
+        <div className="max-w-5xl mx-auto bg-[#2d5a27] rounded-[60px] p-12 md:p-24 text-center text-white relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--brand-accent)_0%,_transparent_70%)] opacity-10"></div>
+          <h2 className="text-4xl md:text-6xl font-bold mb-8 relative z-10">Ready to start trading?</h2>
+          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto relative z-10 leading-relaxed">
+            Download the CattleTrade mobile app today and join the most trusted marketplace for livestock.
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 relative z-10">
+             <a href="#" className="store-button !bg-white !text-black !py-4 !px-8">
+                <Smartphone size={28} />
+                <div className="text-left">
+                  <div className="text-[10px] uppercase opacity-60">Download on</div>
+                  <div className="text-sm font-bold">App Store</div>
+                </div>
+              </a>
+              <a href="#" className="store-button !bg-white !text-black !py-4 !px-8">
+                <Globe size={28} />
+                <div className="text-left">
+                  <div className="text-[10px] uppercase opacity-60">Get it on</div>
+                  <div className="text-sm font-bold">Google Play</div>
+                </div>
+              </a>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer className="bg-[#1a1a1a] text-white py-20 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+      <footer id="about" className="bg-[#1a1a1a] text-white py-24 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-16">
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex items-center gap-2 mb-8">
               <ShoppingBag className="text-[#d4a373] w-8 h-8" />
               <span className="text-3xl font-bold tracking-tight">Cattle<span className="text-[#d4a373]">Trade</span></span>
             </div>
-            <p className="text-white/60 mb-8 max-w-sm leading-relaxed">
-              Empowering farmers and animal lovers across the country with a premium, 
-              secure, and easy-to-use trading platform.
+            <p className="text-white/50 mb-10 max-w-sm leading-relaxed text-lg">
+              Revolutionizing the livestock industry through technology, 
+              ensuring every trade is fair, secure, and transparent.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#2d5a27] transition-colors"><Globe size={20} /></a>
-              <a href="#" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#2d5a27] transition-colors"><ShieldCheck size={20} /></a>
+              <a href="#" className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#2d5a27] transition-all"><Globe size={20} /></a>
+              <a href="#" className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#2d5a27] transition-all"><Users size={20} /></a>
             </div>
           </div>
           <div>
-            <h4 className="font-bold text-lg mb-6">Quick Links</h4>
-            <ul className="space-y-4 text-white/60">
-              <li><a href="#" className="hover:text-white transition-colors">Browse Listings</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Market Statistics</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Seller Guide</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Safety Tips</a></li>
+            <h4 className="font-bold text-xl mb-8">Product</h4>
+            <ul className="space-y-4 text-white/50">
+              <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">How it Works</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Market Prices</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Safety</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-lg mb-6">Support</h4>
-            <ul className="space-y-4 text-white/60">
-              <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+            <h4 className="font-bold text-xl mb-8">Company</h4>
+            <ul className="space-y-4 text-white/50">
+              <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
             </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto pt-12 mt-12 border-t border-white/10 text-center text-white/40 text-sm">
-          © 2026 CattleTrade Marketplace. All rights reserved. Made with ❤️ for farmers.
-        </div>
-        
-        {/* Developer Debug Section */}
-        <div className="max-w-7xl mx-auto mt-20 opacity-20 hover:opacity-100 transition-opacity">
-          <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
-            <h5 className="text-white font-mono mb-4 text-xs uppercase tracking-widest">Dev Debug Mode</h5>
-            <APITester />
-          </div>
+        <div className="max-w-7xl mx-auto pt-16 mt-16 border-t border-white/5 text-center text-white/30 text-sm italic">
+          © 2026 CattleTrade. Dedicated to the heart of the farm.
         </div>
       </footer>
     </div>
   );
 }
-
-// export default App;
