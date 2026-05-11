@@ -23,6 +23,7 @@ import buffaloImg from './assets/buffalo.png';
 import dogImg from './assets/dog.png';
 import catImg from './assets/cat.png';
 import mockupImg from './assets/mockup.png';
+import patternImg from './assets/pattern.png';
 
 export function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -53,42 +54,46 @@ export function App() {
   return (
     <div className="min-h-screen">
       {/* Navigation */}
-      <nav className="glass-effect fixed top-0 w-full z-50 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-[#2d5a27] p-2 rounded-lg">
+      <nav className="fixed top-0 w-full z-50 flex justify-center pointer-events-none">
+        <div className="nav-island glass-effect flex items-center justify-between px-8 py-3 pointer-events-auto w-full">
+          <div className="flex items-center gap-3 group cursor-pointer">
+            <div className="bg-[#2d5a27] p-2.5 rounded-xl group-hover:scale-110 transition-transform">
               <ShoppingBag className="text-white w-6 h-6" />
             </div>
-            <span className="text-2xl font-bold tracking-tight text-[#2d5a27]">Cattle<span className="text-[#d4a373]">Trade</span></span>
+            <span className="text-2xl font-bold tracking-tight text-[#2d5a27]">
+              Cattle<span className="text-[#d4a373]">Trade</span>
+            </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center bg-[#2d5a27]/5 rounded-2xl p-1 gap-1">
             <a href="#features" className="nav-link">Features</a>
             <a href="#discover" className="nav-link">Discover</a>
             <a href="#about" className="nav-link">About Us</a>
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="btn-primary">
-              <Download size={20} />
+            <button className="btn-primary !px-6 !py-3 shadow-lg shadow-[#2d5a27]/20">
+              <Download size={18} />
               Get the App
             </button>
-            <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              <Menu />
+            <button className="md:hidden p-2 text-[#2d5a27]" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              <Menu size={24} />
             </button>
           </div>
         </div>
 
         {/* Mobile Menu Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden glass-effect absolute top-full left-0 w-full p-6 space-y-4 animate-fade-in shadow-xl">
-            <a href="#features" className="block nav-link" onClick={() => setIsMenuOpen(false)}>Features</a>
-            <a href="#discover" className="block nav-link" onClick={() => setIsMenuOpen(false)}>Discover</a>
-            <a href="#about" className="block nav-link" onClick={() => setIsMenuOpen(false)}>About Us</a>
+          <div className="md:hidden glass-effect absolute top-[90px] right-6 left-6 p-8 rounded-[32px] space-y-6 animate-fade-in shadow-2xl pointer-events-auto border-[#eee]">
+            <div className="flex flex-col gap-4">
+              <a href="#features" className="text-xl font-bold text-[#1a1a1a]" onClick={() => setIsMenuOpen(false)}>Features</a>
+              <a href="#discover" className="text-xl font-bold text-[#1a1a1a]" onClick={() => setIsMenuOpen(false)}>Discover</a>
+              <a href="#about" className="text-xl font-bold text-[#1a1a1a]" onClick={() => setIsMenuOpen(false)}>About Us</a>
+            </div>
             <hr className="border-[#eee]" />
-            <button className="w-full btn-primary justify-center">
+            <button className="w-full btn-primary justify-center !py-4">
               <Download size={20} />
-              Download Now
+              Download App
             </button>
           </div>
         )}
@@ -192,28 +197,53 @@ export function App() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 px-6">
-        <div className="max-w-5xl mx-auto bg-[#2d5a27] rounded-[60px] p-12 md:p-24 text-center text-white relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--brand-accent)_0%,_transparent_70%)] opacity-10"></div>
-          <h2 className="text-4xl md:text-6xl font-bold mb-8 relative z-10">Ready to start trading?</h2>
-          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto relative z-10 leading-relaxed">
-            Download the CattleTrade mobile app today and join the most trusted marketplace for livestock.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6 relative z-10">
-             <a href="#" className="store-button !bg-white !text-black !py-4 !px-8">
-                <Smartphone size={28} />
-                <div className="text-left">
-                  <div className="text-[10px] uppercase opacity-60">Download on</div>
-                  <div className="text-sm font-bold">App Store</div>
-                </div>
-              </a>
-              <a href="#" className="store-button !bg-white !text-black !py-4 !px-8">
-                <Globe size={28} />
-                <div className="text-left">
-                  <div className="text-[10px] uppercase opacity-60">Get it on</div>
-                  <div className="text-sm font-bold">Google Play</div>
-                </div>
-              </a>
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto mesh-gradient rounded-[60px] relative overflow-hidden group">
+          {/* Decorative Pattern Overlay */}
+          <div 
+            className="absolute inset-0 opacity-10 mix-blend-overlay"
+            style={{ backgroundImage: `url(${patternImg})`, backgroundSize: '400px' }}
+          ></div>
+          
+          <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center p-12 md:p-24">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white/10 text-white/90 px-4 py-2 rounded-full text-sm font-bold mb-8">
+                <Smartphone size={16} />
+                Available on iOS & Android
+              </div>
+              <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
+                Ready to start <br /> 
+                <span className="text-[#d4a373]">Trading Cattle?</span>
+              </h2>
+              <p className="text-xl text-white/70 mb-12 max-w-lg leading-relaxed">
+                Join over 50,000+ farmers already using CattleTrade to find the best livestock deals in their region.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                 <a href="#" className="glass-store-button">
+                    <Smartphone size={28} />
+                    <div className="text-left">
+                      <div className="text-[10px] uppercase opacity-60">Download on</div>
+                      <div className="text-sm font-bold">App Store</div>
+                    </div>
+                  </a>
+                  <a href="#" className="glass-store-button">
+                    <Globe size={28} />
+                    <div className="text-left">
+                      <div className="text-[10px] uppercase opacity-60">Get it on</div>
+                      <div className="text-sm font-bold">Google Play</div>
+                    </div>
+                  </a>
+              </div>
+            </div>
+            
+            <div className="hidden md:block relative">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[#d4a373]/20 rounded-full blur-[100px] -z-10 animate-pulse"></div>
+              <img 
+                src={mockupImg} 
+                alt="App Interface" 
+                className="w-full max-w-md mx-auto cta-floating-image drop-shadow-[0_40px_80px_rgba(0,0,0,0.3)]"
+              />
+            </div>
           </div>
         </div>
       </section>
