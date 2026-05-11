@@ -249,43 +249,91 @@ export function App() {
       </section>
 
       {/* Footer */}
-      <footer id="about" className="bg-[#1a1a1a] text-white py-24 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-16">
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center gap-2 mb-8">
-              <ShoppingBag className="text-[#d4a373] w-8 h-8" />
-              <span className="text-3xl font-bold tracking-tight">Cattle<span className="text-[#d4a373]">Trade</span></span>
+      <footer id="about" className="bg-[#0a1509] text-white pt-32 pb-12 px-6 overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
+            {/* Brand Column */}
+            <div className="lg:col-span-4">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="bg-[#2d5a27] p-2.5 rounded-xl">
+                  <ShoppingBag className="text-white w-6 h-6" />
+                </div>
+                <span className="text-3xl font-bold tracking-tight text-white">
+                  Cattle<span className="text-[#d4a373]">Trade</span>
+                </span>
+              </div>
+              <p className="text-white/50 mb-10 leading-relaxed text-lg max-w-sm">
+                Empowering the livestock industry through transparent, secure, and efficient mobile technology. Join the revolution today.
+              </p>
+              <div className="flex gap-4">
+                <a href="#" className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-[#2d5a27] hover:text-white transition-all text-white/50 border border-white/5">
+                  <Globe size={20} />
+                </a>
+                <a href="#" className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-[#2d5a27] hover:text-white transition-all text-white/50 border border-white/5">
+                  <Users size={20} />
+                </a>
+                <a href="#" className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:bg-[#2d5a27] hover:text-white transition-all text-white/50 border border-white/5">
+                  <Smartphone size={20} />
+                </a>
+              </div>
             </div>
-            <p className="text-white/50 mb-10 max-w-sm leading-relaxed text-lg">
-              Revolutionizing the livestock industry through technology, 
-              ensuring every trade is fair, secure, and transparent.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#2d5a27] transition-all"><Globe size={20} /></a>
-              <a href="#" className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#2d5a27] transition-all"><Users size={20} /></a>
+
+            {/* Links Columns */}
+            <div className="lg:col-span-4 grid grid-cols-2 gap-8">
+              <div>
+                <h4 className="font-bold text-lg mb-8 text-white">Quick Access</h4>
+                <ul className="space-y-4">
+                  <li><a href="#" className="footer-link">Features</a></li>
+                  <li><a href="#" className="footer-link">How it Works</a></li>
+                  <li><a href="#" className="footer-link">Marketplace</a></li>
+                  <li><a href="#" className="footer-link">Safety First</a></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-bold text-lg mb-8 text-white">Resources</h4>
+                <ul className="space-y-4">
+                  <li><a href="#" className="footer-link">Help Center</a></li>
+                  <li><a href="#" className="footer-link">Privacy Policy</a></li>
+                  <li><a href="#" className="footer-link">Terms of Use</a></li>
+                  <li><a href="#" className="footer-link">Cookie Policy</a></li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Newsletter Column */}
+            <div className="lg:col-span-4">
+              <div className="bg-white/5 rounded-[32px] p-8 border border-white/5 backdrop-blur-sm">
+                <h4 className="font-bold text-xl mb-4 text-white">Join our Newsletter</h4>
+                <p className="text-white/50 mb-6 text-sm">Stay updated with the latest livestock prices and market insights.</p>
+                <div className="space-y-3">
+                  <input type="email" placeholder="Email address" className="newsletter-input" />
+                  <button className="w-full btn-primary !py-4 justify-center">
+                    Subscribe Now
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-          <div>
-            <h4 className="font-bold text-xl mb-8">Product</h4>
-            <ul className="space-y-4 text-white/50">
-              <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">How it Works</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Market Prices</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Safety</a></li>
-            </ul>
+
+          <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-6 text-white/30 text-sm">
+              <span>© 2026 CattleTrade Inc.</span>
+              <div className="hidden md:block w-1 h-1 bg-white/10 rounded-full"></div>
+              <span>All rights reserved.</span>
+            </div>
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2 text-white/50 text-sm">
+                <ShieldCheck size={16} className="text-[#2d5a27]" />
+                Verified Platform
+              </div>
+              <div className="flex items-center gap-2 text-white/50 text-sm">
+                <Globe size={16} className="text-[#2d5a27]" />
+                English (US)
+              </div>
+            </div>
           </div>
-          <div>
-            <h4 className="font-bold text-xl mb-8">Company</h4>
-            <ul className="space-y-4 text-white/50">
-              <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
-            </ul>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto pt-16 mt-16 border-t border-white/5 text-center text-white/30 text-sm italic">
-          © 2026 CattleTrade. Dedicated to the heart of the farm.
         </div>
       </footer>
     </div>

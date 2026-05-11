@@ -237,8 +237,32 @@
   animation: float 6s ease-in-out infinite;
 }
 
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-  100% { transform: translateY(0px); }
+.footer-link {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-link:hover {
+  color: var(--brand-accent);
+  transform: translateX(4px);
+}
+
+.newsletter-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 20px;
+  border-radius: 16px;
+  color: white;
+  outline: none;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.newsletter-input:focus {
+  border-color: var(--brand-primary);
+  background: rgba(255, 255, 255, 0.08);
 }
