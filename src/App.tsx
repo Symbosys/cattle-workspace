@@ -72,7 +72,7 @@ export function App() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="btn-primary !px-6 !py-3 shadow-lg shadow-[#2d5a27]/20">
+            <button className="btn-primary px-6! py-3! shadow-lg shadow-[#2d5a27]/20">
               <Download size={18} />
               Get the App
             </button>
@@ -91,7 +91,7 @@ export function App() {
               <a href="#about" className="text-xl font-bold text-[#1a1a1a]" onClick={() => setIsMenuOpen(false)}>About Us</a>
             </div>
             <hr className="border-[#eee]" />
-            <button className="w-full btn-primary justify-center !py-4">
+            <button className="w-full btn-primary justify-center py-4!">
               <Download size={20} />
               Download App
             </button>
@@ -250,7 +250,7 @@ export function App() {
 
       {/* Footer */}
       <footer id="about" className="bg-[#0a1509] text-white pt-32 pb-12 px-6 overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
         
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
@@ -309,7 +309,7 @@ export function App() {
                 <p className="text-white/50 mb-6 text-sm">Stay updated with the latest livestock prices and market insights.</p>
                 <div className="space-y-3">
                   <input type="email" placeholder="Email address" className="newsletter-input" />
-                  <button className="w-full btn-primary !py-4 justify-center">
+                  <button className="w-full btn-primary py-4! justify-center">
                     Subscribe Now
                   </button>
                 </div>
