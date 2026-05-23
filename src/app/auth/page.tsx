@@ -6,6 +6,7 @@ import { useSendOtp, useVerifyOtp } from "@/api/hooks/user/auth";
 
 export default function AuthPage() {
   const router = useRouter();
+
   const [mobile, setMobile] = useState("");
   const [otpValues, setOtpValues] = useState<string[]>(Array(4).fill(""));
   const [step, setStep] = useState<"send" | "verify">("send");
@@ -59,7 +60,7 @@ export default function AuthPage() {
       {
         onSuccess: (response) => {
           setStep("verify");
-          setTimer(60);
+          setTimer(25); // Set Resend cooldown to 00:25 as shown in mockup
           setSuccessMessage(response.message);
         },
         onError: (err: any) => {
@@ -90,7 +91,6 @@ export default function AuthPage() {
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("user", JSON.stringify(response.data.user));
           }
-          // Redirect to root "/" immediately
           router.push("/");
         },
         onError: (err: any) => {
@@ -149,213 +149,234 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center p-6 min-h-screen bg-zinc-950 text-zinc-50 relative overflow-hidden select-none font-sans">
+    <div className="min-h-screen w-full flex flex-col md:flex-row bg-background text-foreground transition-colors duration-300 font-sans">
       
-      {/* Premium ambient grid overlay & background styling */}
-      <div 
-        className="absolute inset-0 opacity-[0.06] pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 1px, transparent 1px)
-          `,
-          backgroundSize: "2.5rem 2.5rem",
-          maskImage: "radial-gradient(ellipse 55% 55% at 50% 50%, #000 65%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 55% 55% at 50% 50%, #000 65%, transparent 100%)"
-        }}
-      />
-      <div className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[450px] h-[450px] rounded-full bg-emerald-500/[0.04] blur-[110px] pointer-events-none" />
-      <div className="absolute bottom-[15%] left-1/2 -translate-x-1/2 w-[550px] h-[550px] rounded-full bg-teal-500/[0.04] blur-[130px] pointer-events-none" />
+      {/* Left Panel: Contains the background image for desktop */}
+      <div className="hidden md:block md:w-[52%] lg:w-[58%] relative min-h-screen overflow-hidden select-none bg-background">
+        <img
+          src="/login/cows.png"
+          alt="PashuSetu Banner"
+          className="w-full h-full object-cover select-none"
+        />
+        {/* Soft edge blend gradient on the right edge */}
+        <div className="absolute inset-y-0 right-0 w-80 bg-gradient-to-l from-background via-background/60 to-transparent" />
+      </div>
 
-      {/* Main Glass Card with gradient highlight */}
-      <div className="relative w-full max-w-sm bg-zinc-900/30 backdrop-blur-2xl border border-zinc-800/60 rounded-2xl shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)] p-8 md:p-9 transition-all duration-300">
-        
-        {/* Sleek top lighting bar */}
-        <div className="absolute top-0 inset-x-12 h-[1px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
-        
-        {/* Brand identity */}
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-11 h-11 bg-zinc-900/80 border border-zinc-800/80 rounded-xl flex items-center justify-center mb-3 shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]">
-            <svg className="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 18c-3.3 0-6-2.7-6-6v-2c0-1.7 1.3-3 3-3h6c1.7 0 3 1.3 3 3v2c0 3.3-2.7 6-6 6z" />
-              <path d="M5 6c0 0-2 2-2 4s2 2 2 2" />
-              <path d="M19 6c0 0 2 2 2 4s-2 2-2 2" />
-              <circle cx="12" cy="11.5" r="1" fill="currentColor" />
-            </svg>
-          </div>
-          <h2 className="text-xs font-bold tracking-[0.25em] text-zinc-500 uppercase select-none">
-            Pashu
-          </h2>
-        </div>
-
-        {/* Step 1: Send OTP */}
-        {step === "send" && (
-          <form onSubmit={handleSendOtp} className="flex flex-col gap-6">
-            <div className="flex flex-col gap-1 text-center">
-              <h1 className="text-xl font-semibold text-zinc-100 tracking-tight">
-                Log in or sign up
-              </h1>
-              <p className="text-xs text-zinc-500">
-                Enter your mobile number to access Pashu
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="mobile" className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                Mobile Number
-              </label>
-              <div className="relative flex items-center bg-zinc-950/40 border border-zinc-800/80 hover:border-zinc-700/80 focus-within:border-emerald-500/50 focus-within:ring-2 focus-within:ring-emerald-500/5 rounded-xl transition-all">
-                <span className="pl-4 pr-2.5 text-sm text-zinc-500 font-semibold border-r border-zinc-800/60 mr-2 py-3 select-none">
-                  +
-                </span>
-                <input
-                  id="mobile"
-                  type="tel"
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value.replace(/\D/g, ""))}
-                  placeholder="919876543210"
-                  className="w-full pr-4 py-3 bg-transparent text-zinc-100 text-sm outline-none placeholder:text-zinc-700 tracking-wider font-semibold font-mono"
-                  disabled={sendOtpMutation.isPending}
-                />
-              </div>
-            </div>
-
-            {error && (
-              <div className="flex items-start gap-2 text-xs text-rose-400 bg-rose-500/[0.03] border border-rose-500/10 p-3 rounded-xl">
-                <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <span className="font-medium">{error}</span>
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={sendOtpMutation.isPending}
-              className="w-full py-3.5 bg-zinc-100 hover:bg-white active:bg-zinc-200 disabled:bg-zinc-800 disabled:text-zinc-600 rounded-xl text-sm font-semibold text-zinc-950 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed shadow-[0_8px_16px_-4px_rgba(255,255,255,0.05)]"
-            >
-              {sendOtpMutation.isPending ? (
-                <>
-                  <svg className="animate-spin h-4 w-4 text-zinc-950" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  <span>Sending code...</span>
-                </>
-              ) : (
-                "Continue"
-              )}
-            </button>
-          </form>
-        )}
-
-        {/* Step 2: Verify OTP */}
-        {step === "verify" && (
-          <form onSubmit={handleVerifyOtp} className="flex flex-col gap-6">
+      {/* Right Panel: Contains the Card */}
+      <div className="w-full md:w-[48%] lg:w-[42%] flex items-center justify-center p-0 md:p-6 min-h-screen bg-background">
+        <div className="relative w-full h-full min-h-screen md:min-h-0 md:max-w-[400px] bg-background md:bg-card border-0 md:border border-border rounded-none md:rounded-2xl shadow-none md:shadow-[0_8px_30px_rgb(0,0,0,0.02)] md:dark:shadow-[0_24px_50px_rgba(0,0,0,0.4)] p-6 sm:p-8 md:p-9 flex flex-col justify-center transition-all duration-300">
+          
+          {/* Circular Back Button (Only shown in Step 2) */}
+          {step === "verify" && (
             <button
               type="button"
               onClick={handleBackToSubmit}
-              className="self-start text-[11px] text-zinc-400 hover:text-zinc-200 flex items-center gap-1 transition-colors group cursor-pointer font-medium"
+              className="absolute top-6 left-6 w-9 h-9 bg-card border border-border hover:bg-muted/40 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-all cursor-pointer shadow-sm"
+              aria-label="Go back"
             >
-              <svg className="w-3.5 h-3.5 transform group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
-              Change number
             </button>
+          )}
 
-            <div className="flex flex-col gap-1 text-center">
-              <h1 className="text-xl font-semibold text-zinc-100 tracking-tight">
-                Enter verification code
-              </h1>
-              <p className="text-xs text-zinc-500">
-                Code sent to <span className="font-semibold text-zinc-300 font-mono">+{mobile}</span>
-              </p>
+          {/* Logo brand banner - enlarged size */}
+          <div className="flex flex-col items-center mb-8 mt-2 select-none">
+            <img src="/logo/logo.png" alt="PashuSetu Logo" className="h-36 md:h-40 object-contain" />
+          </div>
+
+          {/* Stepper Steps (1 Enter Phone -> 2 Verify OTP) */}
+          <div className="flex items-center justify-between mb-8 text-[11px] font-bold select-none max-w-[280px] mx-auto">
+            <div className="flex items-center gap-1.5">
+              <div className="w-5.5 h-5.5 rounded-full flex items-center justify-center text-[10px] bg-primary text-primary-foreground font-bold">
+                {step === "send" ? "1" : "✓"}
+              </div>
+              <span className={step === "send" ? "text-foreground font-semibold" : "text-muted-foreground font-normal"}>Enter Phone</span>
             </div>
+            <div className={`flex-1 h-[2px] mx-3 ${step === "verify" ? "bg-primary" : "bg-border"}`} />
+            <div className="flex items-center gap-1.5">
+              <div className={`w-5.5 h-5.5 rounded-full flex items-center justify-center text-[10px] border font-bold ${step === "verify" ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground"}`}>
+                2
+              </div>
+              <span className={step === "verify" ? "text-foreground font-semibold" : "text-muted-foreground font-normal"}>Verify OTP</span>
+            </div>
+          </div>
 
-            {/* Split OTP Fields */}
-            <div className="flex flex-col gap-2.5">
-              <div className="flex justify-center gap-2.5">
-                {otpValues.map((digit, idx) => (
+          {/* Step 1: Send OTP Form */}
+          {step === "send" && (
+            <form onSubmit={handleSendOtp} className="flex flex-col gap-6">
+              <div className="flex flex-col gap-1.5 text-center">
+                <h1 className="text-xl font-bold text-foreground tracking-tight">
+                  Enter your mobile number
+                </h1>
+                <p className="text-xs text-muted-foreground">
+                  We will send you a 4-digit OTP to login
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <div className="relative flex items-center bg-background border border-border hover:border-border/80 focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/5 rounded-lg overflow-hidden transition-all shadow-inner">
+                  <div className="flex items-center gap-1 px-3 py-3.5 border-r border-border bg-muted/20 select-none">
+                    <span className="text-sm">🇮🇳</span>
+                    <span className="text-xs font-bold text-foreground">+91</span>
+                    <svg className="w-2.5 h-2.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
                   <input
-                    key={idx}
-                    ref={(el) => {
-                      otpRefs.current[idx] = el;
-                    }}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={digit}
-                    onChange={(e) => handleOtpChange(e.target.value, idx)}
-                    onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-                    onPaste={handleOtpPaste}
-                    className="w-12 h-12 bg-zinc-950/40 border border-zinc-800/80 text-center text-lg font-bold font-mono text-zinc-100 rounded-xl focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/5 outline-none transition-all shadow-inner"
-                    disabled={verifyOtpMutation.isPending}
+                    id="mobile"
+                    type="tel"
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value.replace(/\D/g, ""))}
+                    placeholder="Enter your mobile number"
+                    className="w-full pl-3 pr-4 py-3 bg-transparent text-foreground text-sm outline-none placeholder:text-muted-foreground/60 tracking-wider font-semibold font-mono"
+                    disabled={sendOtpMutation.isPending}
                   />
-                ))}
+                </div>
               </div>
-              <span className="text-[10px] text-zinc-600 text-center font-medium select-none">
-                Tip: You can paste the complete 4-digit code directly
-              </span>
-            </div>
 
-            {error && (
-              <div className="flex items-start gap-2 text-xs text-rose-400 bg-rose-500/[0.03] border border-rose-500/10 p-3 rounded-xl">
-                <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <span className="font-medium">{error}</span>
-              </div>
-            )}
+              {error && (
+                <div className="flex items-start gap-2 text-xs text-rose-600 dark:text-rose-400 bg-rose-500/[0.04] border border-rose-500/10 p-3 rounded-lg">
+                  <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span className="font-medium">{error}</span>
+                </div>
+              )}
 
-            {successMessage && !error && (
-              <div className="flex items-start gap-2 text-xs text-emerald-400 bg-emerald-500/[0.03] border border-emerald-500/10 p-3 rounded-xl">
-                <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="font-medium">{successMessage}</span>
-              </div>
-            )}
-
-            <div className="flex flex-col gap-4">
               <button
                 type="submit"
-                disabled={verifyOtpMutation.isPending}
-                className="w-full py-3.5 bg-zinc-100 hover:bg-white active:bg-zinc-200 disabled:bg-zinc-800 disabled:text-zinc-600 rounded-xl text-sm font-semibold text-zinc-950 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed shadow-[0_8px_16px_-4px_rgba(255,255,255,0.05)]"
+                disabled={sendOtpMutation.isPending}
+                className="w-full py-3.5 bg-primary hover:bg-primary/95 text-primary-foreground rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed shadow-sm uppercase tracking-wider"
               >
-                {verifyOtpMutation.isPending ? (
+                {sendOtpMutation.isPending ? (
                   <>
-                    <svg className="animate-spin h-4 w-4 text-zinc-950" viewBox="0 0 24 24" fill="none">
+                    <svg className="animate-spin h-4 w-4 text-primary-foreground" viewBox="0 0 24 24" fill="none">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    <span>Verifying...</span>
+                    <span>Sending OTP...</span>
                   </>
                 ) : (
-                  "Verify code"
+                  "Send OTP"
                 )}
               </button>
 
-              <div className="text-center">
-                {timer > 0 ? (
-                  <p className="text-[11px] text-zinc-500 font-medium select-none">
-                    Resend code in <span className="text-zinc-400 font-semibold font-mono">{timer}s</span>
-                  </p>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleSendOtp}
-                    disabled={sendOtpMutation.isPending}
-                    className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold transition-colors hover:underline cursor-pointer disabled:text-zinc-600"
-                  >
-                    Resend code
-                  </button>
-                )}
-              </div>
-            </div>
-          </form>
-        )}
+              <p className="text-[10px] text-center text-muted-foreground/75 leading-relaxed max-w-[270px] mx-auto select-none mt-1">
+                By continuing, you agree to our{" "}
+                <a href="#" className="underline text-primary hover:text-primary/90 font-bold">Terms of Service</a>
+                {" "}and{" "}
+                <a href="#" className="underline text-primary hover:text-primary/90 font-bold">Privacy Policy</a>
+              </p>
+            </form>
+          )}
 
+          {/* Step 2: Verify OTP Form */}
+          {step === "verify" && (
+            <form onSubmit={handleVerifyOtp} className="flex flex-col gap-6">
+              <div className="flex flex-col gap-1.5 text-center">
+                <h1 className="text-xl font-bold text-foreground tracking-tight flex items-center justify-center gap-1.5">
+                  <span>Enter OTP</span>
+                  <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </h1>
+                <p className="text-xs text-muted-foreground">
+                  We've sent a 4-digit OTP to{" "}
+                  <span className="font-semibold text-foreground font-mono">+{mobile}</span>
+                </p>
+              </div>
+
+              {/* Split OTP Fields (4 inputs) */}
+              <div className="flex flex-col gap-3">
+                <div className="flex justify-center gap-3.5 max-w-sm mx-auto w-full">
+                  {otpValues.map((digit, idx) => (
+                    <input
+                      key={idx}
+                      ref={(el) => {
+                        otpRefs.current[idx] = el;
+                      }}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleOtpChange(e.target.value, idx)}
+                      onKeyDown={(e) => handleOtpKeyDown(e, idx)}
+                      onPaste={handleOtpPaste}
+                      className="w-12 h-12 bg-background border border-border text-center text-lg font-bold font-mono text-foreground rounded-lg focus:border-primary/50 focus:ring-2 focus:ring-primary/5 outline-none transition-all shadow-inner"
+                      disabled={verifyOtpMutation.isPending}
+                    />
+                  ))}
+                </div>
+                
+                <div className="text-center select-none mt-1.5">
+                  {timer > 0 ? (
+                    <p className="text-[11px] text-muted-foreground font-semibold">
+                      Resend OTP in <span className="text-primary font-bold font-mono">00:{timer < 10 ? "0" + timer : timer}</span>
+                    </p>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleSendOtp}
+                      disabled={sendOtpMutation.isPending}
+                      className="text-xs text-primary hover:text-primary/90 font-bold transition-colors hover:underline cursor-pointer disabled:text-muted-foreground"
+                    >
+                      Resend OTP
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {error && (
+                <div className="flex items-start gap-2 text-xs text-rose-600 dark:text-rose-400 bg-rose-500/[0.04] border border-rose-500/10 p-3 rounded-lg">
+                  <svg className="w-4.5 h-4.5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span className="font-medium">{error}</span>
+                </div>
+              )}
+
+              {successMessage && !error && (
+                <div className="flex items-start gap-2 text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-500/[0.04] border border-emerald-500/10 p-3 rounded-lg">
+                  <svg className="w-4.5 h-4.5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-medium">{successMessage}</span>
+                </div>
+              )}
+
+              <div className="flex flex-col gap-3">
+                <button
+                  type="submit"
+                  disabled={verifyOtpMutation.isPending}
+                  className="w-full py-3.5 bg-primary hover:bg-primary/95 text-primary-foreground rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed shadow-sm uppercase tracking-wider"
+                >
+                  {verifyOtpMutation.isPending ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4 text-primary-foreground" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      <span>Verifying...</span>
+                    </>
+                  ) : (
+                    "Verify & Login"
+                  )}
+                </button>
+                
+                <div className="text-center select-none text-[10px] text-muted-foreground font-semibold flex items-center justify-center gap-1.5 mt-2">
+                  <svg className="w-3.5 h-3.5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Your number is safe with us</span>
+                </div>
+              </div>
+            </form>
+          )}
+
+        </div>
       </div>
+
     </div>
   );
 }
