@@ -86,12 +86,20 @@ export default function AuthPage() {
     verifyOtpMutation.mutate(
       { mobile, otp: fullOtp },
       {
-        onSuccess: (response) => {
+        onSuccess: (response: any) => {
           if (typeof window !== "undefined") {
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("user", JSON.stringify(response.data.user));
+            const dataObj = response?.data?.data || response?.data || response;
+            const token = dataObj?.token;
+            const user = dataObj?.user;
+
+            if (token) {
+              localStorage.setItem("token", token);
+            }
+            if (user) {
+              localStorage.setItem("user", JSON.stringify(user));
+            }
           }
-          router.push("/");
+          router.push("/select-location");
         },
         onError: (err: any) => {
           const apiError = err.response?.data?.message || err.message || "Incorrect verification code.";
@@ -159,7 +167,7 @@ export default function AuthPage() {
           className="w-full h-full object-cover select-none"
         />
         {/* Soft edge blend gradient on the right edge */}
-        <div className="absolute inset-y-0 right-0 w-80 bg-gradient-to-l from-background via-background/60 to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-80 bg-linear-to-l from-background via-background/60 to-transparent" />
       </div>
 
       {/* Right Panel: Contains the Card */}
@@ -236,7 +244,7 @@ export default function AuthPage() {
               </div>
 
               {error && (
-                <div className="flex items-start gap-2 text-xs text-rose-600 dark:text-rose-400 bg-rose-500/[0.04] border border-rose-500/10 p-3 rounded-lg">
+                <div className="flex items-start gap-2 text-xs text-rose-600 dark:text-rose-400 bg-rose-500/4 border border-rose-500/10 p-3 rounded-lg">
                   <svg className="w-4 h-4 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
@@ -328,7 +336,7 @@ export default function AuthPage() {
               </div>
 
               {error && (
-                <div className="flex items-start gap-2 text-xs text-rose-600 dark:text-rose-400 bg-rose-500/[0.04] border border-rose-500/10 p-3 rounded-lg">
+                <div className="flex items-start gap-2 text-xs text-rose-600 dark:text-rose-400 bg-rose-500/4 border border-rose-500/10 p-3 rounded-lg">
                   <svg className="w-4.5 h-4.5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
@@ -337,7 +345,7 @@ export default function AuthPage() {
               )}
 
               {successMessage && !error && (
-                <div className="flex items-start gap-2 text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-500/[0.04] border border-emerald-500/10 p-3 rounded-lg">
+                <div className="flex items-start gap-2 text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-500/4 border border-emerald-500/10 p-3 rounded-lg">
                   <svg className="w-4.5 h-4.5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
