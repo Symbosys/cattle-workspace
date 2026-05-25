@@ -243,7 +243,7 @@ export default function PashuListingPage() {
         
         {/* Header Block */}
         <div className="flex flex-col items-center text-center gap-1">
-          <h1 className="text-3xl font-extrabold text-foreground tracking-tight sm:text-4xl bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold text-foreground tracking-tight sm:text-4xl bg-linear-to-r from-primary to-accent bg-clip-text">
             List Your Cattle for Sale
           </h1>
           <p className="text-sm text-muted-foreground max-w-md">

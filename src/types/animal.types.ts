@@ -142,3 +142,44 @@ export interface CattleListing {
   location: ListingLocation;
   images: ListingImage[];
 }
+
+export interface UpdateAnimalListingRequest {
+  // Animal details
+  mainCategoryId?: string;
+  subCategoryId?: string;
+  name?: string | null;
+  category?: string;
+  breed?: string | null;
+  ageMonths?: number | null;
+  gender?: string | null;
+  weightKg?: number | null;
+  description?: string | null;
+  doesGiveMilk?: boolean;
+  dailyMilkProdLtr?: number | null;
+
+  // Listing details
+  title?: string;
+  price?: number;
+  listingDescription?: string;
+  latitude?: number | null;
+  longitude?: number | null;
+
+  // Location details
+  stateName?: string;
+  stateCode?: string | null;
+  stateLatitude?: number | null;
+  stateLongitude?: number | null;
+  cityName?: string;
+  cityLatitude?: number | null;
+  cityLongitude?: number | null;
+  areaName?: string | null;
+  areaLatitude?: number | null;
+  areaLongitude?: number | null;
+
+  // Uploaded files
+  images?: File[];
+
+  // Image IDs to keep
+  keepImageIds?: string[];
+}
+
