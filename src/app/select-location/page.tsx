@@ -3,9 +3,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { State, City } from "country-state-city";
+import { useLocationStore } from "@/store/locationStore";
 
 export default function SelectLocationPage() {
   const router = useRouter();
+  const setLocation = useLocationStore((state) => state.setLocation);
 
   const [loading, setLoading] = useState(true);
   const [selectedState, setSelectedState] = useState<{ name: string; isoCode: string } | null>(null);
@@ -71,6 +73,20 @@ export default function SelectLocationPage() {
       setError("Please select both state and city");
       return;
     }
+
+    // Get city details including latitude/longitude
+    const cityData = citiesList.find((c) => c.name === selectedCity);
+    const latitude = cityData?.latitude || null;
+    const longitude = cityData?.longitude || null;
+
+    // Save location to Zustand store
+    setLocation({
+      state: selectedState.name,
+      stateCode: selectedState.isoCode,
+      city: selectedCity,
+      latitude,
+      longitude,
+    });
 
     if (typeof window !== "undefined") {
       localStorage.setItem(
