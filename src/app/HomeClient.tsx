@@ -24,6 +24,7 @@ import { useLocationStore } from "@/store/locationStore";
 import { useGetListedAnimalsByLocation } from "@/api/hooks/animal/listing";
 import { useGetAllCategories } from "@/api/hooks/animal/category";
 import { Category } from "@/types/animal-category";
+import { formatPrice } from "@/utils/price";
 
 // Mock Listings to act as Featured Recommendations so the page is populated with stunning images
 const MOCK_LISTINGS = [
@@ -141,6 +142,25 @@ const MOCK_LISTINGS = [
   }
 ];
 
+const EMOJI_MAP: Record<string, string> = {
+  cow: "🐄",
+  buffalo: "🦬",
+  cat: "🐱",
+  dog: "🐶",
+  goat: "🐐",
+  sheep: "🐑",
+  horse: "🐎",
+  poultry: "🐔",
+  rabbit: "🐇"
+};
+
+const COLOR_MAP: Record<string, { color: string; text: string }> = {
+  cow: { color: "from-amber-500/10 to-amber-600/5 border-amber-500/10 hover:border-amber-500/30", text: "text-amber-600 dark:text-amber-400" },
+  buffalo: { color: "from-zinc-500/10 to-zinc-600/5 border-zinc-500/10 hover:border-zinc-500/30", text: "text-zinc-600 dark:text-zinc-400" },
+  cat: { color: "from-blue-500/10 to-blue-600/5 border-blue-500/10 hover:border-blue-500/30", text: "text-blue-600 dark:text-blue-400" },
+  dog: { color: "from-orange-500/10 to-orange-600/5 border-orange-500/10 hover:border-orange-500/30", text: "text-orange-600 dark:text-orange-400" },
+};
+
 interface HomeClientProps {
   initialCategories: Category[];
 }
@@ -152,7 +172,7 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
   
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [selectedListing, setSelectedListing] = useState<any | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -186,29 +206,26 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
 
   // Fetch local listings
   const { data: listingsResponse, isLoading: listingsLoading } = useGetListedAnimalsByLocation(
-    { latitude: lat, longitude: lng, limit: 20 },
+    { latitude: lat, longitude: lng, limit: 20, categoryId: selectedCategoryId || undefined },
     { enabled: !authLoading && !!lat && !!lng }
   );
 
   const localListings = listingsResponse?.data?.listings || [];
 
-  // Filter categories helper
-  const handleCategoryClick = (categoryName: string) => {
-    setSelectedCategoryName(prev => prev === categoryName ? null : categoryName);
-  };
-
   // Combine and filter listings for search & category selection
-  const filterListings = (listingsArray: any[]) => {
+  const filterListings = (listingsArray: any[], isLocalListings: boolean = false) => {
     return listingsArray.filter(item => {
-      // Category filter
-      if (selectedCategoryName) {
-        const itemCategory = item.animal.category?.toUpperCase() || "";
-        const targetCategory = selectedCategoryName.toUpperCase();
-        if (itemCategory !== targetCategory && !itemCategory.includes(targetCategory) && !targetCategory.includes(itemCategory)) {
-          // Check matching by DB category name if category matches mainCategoryId
-          const categoryObj = categoriesList.find(c => c.id === item.animal.mainCategoryId);
-          if (!categoryObj || !categoryObj.name.toUpperCase().includes(targetCategory)) {
-            return false;
+      // Category filter (only client-side filter for featured/mock listings since local listings are filtered by categoryId on the server)
+      if (selectedCategoryId && !isLocalListings) {
+        const selectedCategory = categoriesList.find(c => c.id === selectedCategoryId);
+        if (selectedCategory) {
+          const itemCategory = item.animal.category?.toUpperCase() || "";
+          const targetCategory = selectedCategory.name.toUpperCase();
+          if (itemCategory !== targetCategory && !itemCategory.includes(targetCategory) && !targetCategory.includes(itemCategory)) {
+            // Also check mainCategoryId
+            if (item.animal.mainCategoryId !== selectedCategoryId) {
+              return false;
+            }
           }
         }
       }
@@ -227,8 +244,8 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
     });
   };
 
-  const filteredLocalListings = filterListings(localListings);
-  const filteredFeaturedListings = filterListings(MOCK_LISTINGS);
+  const filteredLocalListings = filterListings(localListings, true);
+  const filteredFeaturedListings = filterListings(MOCK_LISTINGS, false);
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {
@@ -377,9 +394,9 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
             </h2>
             <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Select an animal type to filter listings</p>
           </div>
-          {selectedCategoryName && (
+          {selectedCategoryId && (
             <button
-              onClick={() => setSelectedCategoryName(null)}
+              onClick={() => setSelectedCategoryId(null)}
               className="text-xs font-bold text-rose-500 hover:text-rose-600 flex items-center gap-1 cursor-pointer"
             >
               <X className="h-3.5 w-3.5" /> Clear Filter
@@ -387,27 +404,32 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
           )}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {[
-            { name: "Cow", label: "Cows", emoji: "🐄", color: "from-amber-500/10 to-amber-600/5 border-amber-500/10 hover:border-amber-500/30", text: "text-amber-600 dark:text-amber-400" },
-            { name: "Buffalo", label: "Buffaloes", emoji: "🦬", color: "from-zinc-500/10 to-zinc-600/5 border-zinc-500/10 hover:border-zinc-500/30", text: "text-zinc-600 dark:text-zinc-400" },
-            { name: "Cat", label: "Cats", emoji: "🐱", color: "from-blue-500/10 to-blue-600/5 border-blue-500/10 hover:border-blue-500/30", text: "text-blue-600 dark:text-blue-400" },
-            { name: "Dog", label: "Dogs", emoji: "🐶", color: "from-orange-500/10 to-orange-600/5 border-orange-500/10 hover:border-orange-500/30", text: "text-orange-600 dark:text-orange-400" },
-          ].map((cat) => {
-            const isSelected = selectedCategoryName?.toLowerCase() === cat.name.toLowerCase();
+        <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800 snap-x snap-mandatory">
+          {categoriesList.map((cat) => {
+            const isSelected = selectedCategoryId === cat.id;
+            const emoji = EMOJI_MAP[cat.name.toLowerCase()] || "🐾";
+            const style = COLOR_MAP[cat.name.toLowerCase()] || {
+              color: "from-emerald-500/10 to-emerald-600/5 border-emerald-500/10 hover:border-emerald-500/30",
+              text: "text-emerald-600 dark:text-emerald-400"
+            };
+            const imageSecUrl = (cat.imageUrl as any)?.secure_url || (cat.imageUrl as any)?.url;
             return (
               <button
-                key={cat.name}
-                onClick={() => handleCategoryClick(cat.name)}
-                className={`flex flex-col items-center justify-center p-6 bg-gradient-to-br border rounded-2xl transition-all duration-300 group cursor-pointer ${
+                key={cat.id}
+                onClick={() => setSelectedCategoryId(prev => prev === cat.id ? null : cat.id)}
+                className={`flex flex-col items-center justify-center p-6 min-w-[140px] bg-gradient-to-br border rounded-2xl transition-all duration-300 group cursor-pointer snap-start ${
                   isSelected 
                     ? "border-emerald-500 ring-2 ring-emerald-500/20 bg-emerald-50 dark:bg-emerald-950/20" 
-                    : `${cat.color} bg-white dark:bg-zinc-950`
+                    : `${style.color} bg-white dark:bg-zinc-950`
                 }`}
               >
-                <span className="text-4xl group-hover:scale-110 transition-transform duration-300">{cat.emoji}</span>
-                <span className={`mt-3 text-sm font-bold tracking-wide uppercase ${isSelected ? "text-emerald-600 dark:text-emerald-400" : cat.text}`}>
-                  {cat.label}
+                {imageSecUrl ? (
+                  <img src={imageSecUrl} alt={cat.name} className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300" />
+                ) : (
+                  <span className="text-4xl group-hover:scale-110 transition-transform duration-300">{emoji}</span>
+                )}
+                <span className={`mt-3 text-xs sm:text-sm font-bold tracking-wide uppercase truncate max-w-[120px] ${isSelected ? "text-emerald-600 dark:text-emerald-400" : style.text}`}>
+                  {cat.name}
                 </span>
               </button>
             );
@@ -515,7 +537,7 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
 // Listing Card Component
 function ListingCard({ item, onClick }: { item: any; onClick: () => void }) {
   const imageUrl = item.images[0]?.url?.secure_url || "/cow_card.png";
-  const priceFormatted = parseFloat(item.price).toLocaleString("en-IN");
+  const priceFormatted = formatPrice(item.price);
   
   // Date rendering
   const daysAgo = Math.floor((Date.now() - new Date(item.createdAt).getTime()) / 86400000);
@@ -583,7 +605,7 @@ function ListingCard({ item, onClick }: { item: any; onClick: () => void }) {
 // Animal Detail Modal
 function DetailModal({ item, onClose }: { item: any; onClose: () => void }) {
   const imageUrl = item.images[0]?.url?.secure_url || "/cow_card.png";
-  const priceFormatted = parseFloat(item.price).toLocaleString("en-IN");
+  const priceFormatted = formatPrice(item.price);
   
   // Date rendering
   const daysAgo = Math.floor((Date.now() - new Date(item.createdAt).getTime()) / 86400000);

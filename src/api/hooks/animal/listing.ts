@@ -145,6 +145,7 @@ export const useGetListedAnimalsByLocation = (
     longitude: number;
     page?: number;
     limit?: number;
+    categoryId?: string;
   },
   options?: Omit<
     UseQueryOptions<ApiResponse<GetListedAnimalsByLocationResponse>, Error>,
