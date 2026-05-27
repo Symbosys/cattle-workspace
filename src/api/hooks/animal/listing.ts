@@ -1,7 +1,17 @@
-import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 import apiClient from "../../apiClient";
 import type { ApiResponse } from "../../../types/user.types";
-import type { CreateAnimalListingRequest, CattleListing, UpdateAnimalListingRequest, City } from "../../../types/animal.types";
+import type {
+  CreateAnimalListingRequest,
+  CattleListing,
+  UpdateAnimalListingRequest,
+  City,
+} from "../../../types/animal.types";
 import { showError, successMesssage } from "@/utils/message";
 
 /**
@@ -9,9 +19,17 @@ import { showError, successMesssage } from "@/utils/message";
  * POST /animal/listing
  */
 export const useCreateAnimalListing = (
-  options?: UseMutationOptions<ApiResponse<CattleListing>, Error, CreateAnimalListingRequest>
+  options?: UseMutationOptions<
+    ApiResponse<CattleListing>,
+    Error,
+    CreateAnimalListingRequest
+  >,
 ) => {
-  return useMutation<ApiResponse<CattleListing>, Error, CreateAnimalListingRequest>({
+  return useMutation<
+    ApiResponse<CattleListing>,
+    Error,
+    CreateAnimalListingRequest
+  >({
     mutationFn: async (payload) => {
       const formData = new FormData();
 
@@ -37,7 +55,7 @@ export const useCreateAnimalListing = (
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       return response.data;
@@ -57,7 +75,7 @@ export const useUpdateAnimalListing = (
     ApiResponse<CattleListing>,
     Error,
     { id: string; payload: UpdateAnimalListingRequest }
-  >
+  >,
 ) => {
   return useMutation<
     ApiResponse<CattleListing>,
@@ -95,7 +113,7 @@ export const useUpdateAnimalListing = (
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       return response.data;
@@ -122,19 +140,30 @@ export interface GetListedAnimalsByLocationResponse {
  * GET /animal/listing/location
  */
 export const useGetListedAnimalsByLocation = (
-  params: { latitude: number; longitude: number; page?: number; limit?: number },
-  options?: Omit<UseQueryOptions<ApiResponse<GetListedAnimalsByLocationResponse>, Error>, 'queryKey' | 'queryFn'>
+  params: {
+    latitude: number;
+    longitude: number;
+    page?: number;
+    limit?: number;
+  },
+  options?: Omit<
+    UseQueryOptions<ApiResponse<GetListedAnimalsByLocationResponse>, Error>,
+    "queryKey" | "queryFn"
+  >,
 ) => {
   return useQuery<ApiResponse<GetListedAnimalsByLocationResponse>, Error>({
     queryKey: ["animalListings", "location", params],
     queryFn: async () => {
-      const response = await apiClient.get<ApiResponse<GetListedAnimalsByLocationResponse>>("/animal/listing/location", {
+      const response = await apiClient.get<
+        ApiResponse<GetListedAnimalsByLocationResponse>
+      >("/animal/listing/location", {
         params,
       });
       return response.data;
     },
     // The !! check ensures we only fetch when both latitude and longitude exist
-    enabled: !!params.latitude && !!params.longitude && (options?.enabled ?? true),
+    enabled:
+      !!params.latitude && !!params.longitude && (options?.enabled ?? true),
     ...options,
   });
 };
@@ -145,12 +174,17 @@ export const useGetListedAnimalsByLocation = (
  */
 export const useGetAnimalListingById = (
   id: string,
-  options?: Omit<UseQueryOptions<ApiResponse<CattleListing>, Error>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<ApiResponse<CattleListing>, Error>,
+    "queryKey" | "queryFn"
+  >,
 ) => {
   return useQuery<ApiResponse<CattleListing>, Error>({
     queryKey: ["animalListing", id],
     queryFn: async () => {
-      const response = await apiClient.get<ApiResponse<CattleListing>>(`/animal/listing/${id}`);
+      const response = await apiClient.get<ApiResponse<CattleListing>>(
+        `/animal/listing/${id}`,
+      );
       return response.data;
     },
     enabled: !!id && (options?.enabled ?? true),
