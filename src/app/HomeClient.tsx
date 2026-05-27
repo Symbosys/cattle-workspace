@@ -314,7 +314,7 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
               href="/pashu-listing"
               className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md hover:shadow-emerald-500/10 shadow-black/5 cursor-pointer hover:-translate-y-0.5 active:translate-y-0"
             >
-              <Plus className="h-4 w-4 stroke-[3]" />
+              <Plus className="h-4 w-4 stroke-3" />
               <span>SELL</span>
             </Link>
 
@@ -353,7 +353,7 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
             alt="Cows farm" 
             className="w-full h-full object-cover opacity-35 scale-105 filter blur-xs"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-900/60 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-zinc-950 via-zinc-900/60 to-transparent" />
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center flex flex-col items-center">
@@ -417,7 +417,7 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategoryId(prev => prev === cat.id ? null : cat.id)}
-                className={`flex flex-col items-center justify-center p-6 min-w-[140px] bg-gradient-to-br border rounded-2xl transition-all duration-300 group cursor-pointer snap-start ${
+                className={`flex flex-col items-center justify-center p-6 min-w-[140px] bg-linear-to-br border rounded-2xl transition-all duration-300 group cursor-pointer snap-start ${
                   isSelected 
                     ? "border-emerald-500 ring-2 ring-emerald-500/20 bg-emerald-50 dark:bg-emerald-950/20" 
                     : `${style.color} bg-white dark:bg-zinc-950`
@@ -549,7 +549,7 @@ function ListingCard({ item, onClick }: { item: any; onClick: () => void }) {
       className="group relative bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-900 rounded-2xl overflow-hidden hover:shadow-xl dark:hover:shadow-emerald-950/15 hover:border-emerald-500/20 transition-all duration-300 flex flex-col cursor-pointer hover:-translate-y-1"
     >
       {/* Image container */}
-      <div className="w-full aspect-[4/3] bg-zinc-100 dark:bg-zinc-900 relative overflow-hidden">
+      <div className="w-full aspect-4/3 bg-zinc-100 dark:bg-zinc-900 relative overflow-hidden">
         <img 
           src={imageUrl} 
           alt={item.title} 
@@ -629,7 +629,7 @@ function DetailModal({ item, onClose }: { item: any; onClose: () => void }) {
 
         {/* Left/Top: Image & Description */}
         <div className="w-full md:w-[55%] flex flex-col bg-zinc-100 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-900">
-          <div className="w-full aspect-[4/3] relative">
+          <div className="w-full aspect-4/3 relative">
             <img src={imageUrl} alt={item.title} className="w-full h-full object-cover" />
             <div className="absolute bottom-4 left-4 bg-black/60 text-[10px] font-bold text-white uppercase tracking-wider px-3 py-1 rounded-full border border-white/10">
               {item.animal.category}

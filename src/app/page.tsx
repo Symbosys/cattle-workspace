@@ -1,7 +1,6 @@
-import React from "react";
+import { Category } from "@/types/animal-category";
 import { cacheLife } from "next/cache";
 import HomeClient from "./HomeClient";
-import { Category } from "@/types/animal-category";
 
 export const metadata = {
   title: "PashuSetu - Animal & Cattle Marketplace",
