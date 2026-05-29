@@ -460,7 +460,7 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
             ) : filteredLocalListings.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filteredLocalListings.map((item) => (
-                  <ListingCard key={item.id} item={item} onClick={() => setSelectedListing(item)} />
+                  <ListingCard key={item.id} item={item} onClick={() => router.push(`/listing/${item.id}`)} />
                 ))}
               </div>
             ) : (
@@ -498,7 +498,7 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
           {filteredFeaturedListings.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {filteredFeaturedListings.map((item) => (
-                <ListingCard key={item.id} item={item} onClick={() => setSelectedListing(item)} />
+                <ListingCard key={item.id} item={item} onClick={() => router.push(`/listing/${item.id}`)} />
               ))}
             </div>
           ) : (
@@ -525,10 +525,7 @@ export default function HomeClient({ initialCategories }: HomeClientProps) {
         </div>
       </footer>
 
-      {/* 6. DETAIL VIEW MODAL */}
-      {selectedListing && (
-        <DetailModal item={selectedListing} onClose={() => setSelectedListing(null)} />
-      )}
+
 
     </div>
   );

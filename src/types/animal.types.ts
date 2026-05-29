@@ -141,6 +141,12 @@ export interface CattleListing {
   animal: Animal;
   location: ListingLocation;
   images: ListingImage[];
+  owner?: {
+    id: string;
+    name: string | null;
+    phone: string;
+    avatarUrl?: any;
+  } | null;
 }
 
 export interface UpdateAnimalListingRequest {
