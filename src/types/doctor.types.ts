@@ -85,3 +85,36 @@ export interface UpdateDoctorRequest {
   cityLongitude?: number | null;
   qualificationDoc?: File;
 }
+
+export interface DoctorReview {
+  id: string;
+  doctorId: string;
+  appointmentId: string;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+  appointment?: {
+    patient: {
+      id: string;
+      name: string;
+      avatarUrl: string | null;
+    };
+  };
+}
+
+export interface CreateDoctorReviewRequest {
+  appointmentId: string;
+  rating: number;
+  comment?: string;
+}
+
+export interface GetDoctorReviewsResponse {
+  reviews: DoctorReview[];
+  pagination: {
+    total: number;
+    totalPages: number;
+    currentPage: number;
+    count: number;
+  };
+}
+
